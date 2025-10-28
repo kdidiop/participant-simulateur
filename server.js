@@ -14,6 +14,7 @@ const errorHandler = require('./middleware/error-handler');
 // Import controllers
 const comptesController = require('./controllers/comptes');
 const oauthController = require('./controllers/oauth');
+const webhooksController = require('./controllers/webhooks');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -42,7 +43,6 @@ app.use((req, res, next) => {
 });
 
 // Routes publiques (sans authentification)
-app.post('/oauth/token', oauthController.getToken);
 
 // Routes du module Comptes - Noms correspondant aux operationId
 // Routes spécifiques avant les routes avec paramètres
@@ -53,6 +53,13 @@ app.get('/comptes/:numero', comptesController.compteSoldeConsulter);
 app.get('/comptes/:numero/alias', comptesController.aliasLister);
 app.post('/comptes/:numero/alias', comptesController.aliasCreer);
 app.delete('/comptes/:numero/alias/:cle', comptesController.aliasSupprimer);
+
+// Routes du module Webhooks
+app.get('/webhooks/:id', webhooksController.webhookConsulter);
+app.post('/webhooks', webhooksController.webhookCreer);
+app.put('/webhooks/:id', webhooksController.webhookModifier);
+app.delete('/webhooks/:id', webhooksController.webhookSupprimer);
+app.post('/webhooks/:id/secrets', webhooksController.webhookSecretRenouveler);
 
 // Route de santé
 app.get('/health', (req, res) => {
@@ -86,7 +93,7 @@ app.post('/oauth/token', (req, res) => {
         access_token: 'mock-token-' + Date.now(),
         token_type: 'Bearer',
         expires_in: 3600,
-        scope: 'compte.read compte.write alias.read alias.write alias.delete compte_transaction.read compte_transaction.write'
+        scope: 'compte.read compte.write alias.read alias.write alias.delete compte_transaction.read compte_transaction.write webhook.read webhook.write webhook.delete webhook.secret'
     };
 
     logger.info('Token OAuth2 généré', { client_id, scope: token.scope });

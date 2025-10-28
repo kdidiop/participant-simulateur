@@ -184,7 +184,7 @@ docker stats pi-spi-simulator
 ### Endpoint de santé
 
 ```bash
-curl https://your-app-url.com/health
+curl https://web-production-da8b.up.railway.app/health
 ```
 
 **Réponse attendue :**
@@ -200,7 +200,7 @@ curl https://your-app-url.com/health
 
 ```bash
 # Tester l'authentification OAuth2
-curl -X POST https://your-app-url.com/oauth/token \
+curl -X POST https://web-production-da8b.up.railway.app/oauth/token \
   -H "Content-Type: application/json" \
   -d '{"client_id": "mock-client-id", "client_secret": "mock-client-secret", "grant_type": "client_credentials"}'
 
